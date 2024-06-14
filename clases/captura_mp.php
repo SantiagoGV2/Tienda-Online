@@ -47,8 +47,13 @@ if ($id_transaccion != '') {
             }
             require 'Mailer.php';
 
-            $asunto = 'Detalle de su compra';
-            $cuerpo = '<h4>Gracias por su compra</h4><p>El ID de su compra es <b>' . $id_transaccion . '</b></p>';
+            $asunto = 'Confirmación de Compra - Detalle de Transacción';
+            $cuerpo = '<h3>Estimado/a cliente,</h3>'
+                    . '<p>Gracias por realizar su compra en nuestra tienda en línea. A continuación, encontrará los detalles de su transacción:</p>'
+                    . '<p>Identificador de Transacción: <b>' . $id_transaccion . '</b></p>'
+                    . '<p>Para cualquier consulta adicional, no dude en contactarnos.</p>'
+                    . '<p>Atentamente,</p>'
+                    . '<p>El equipo de nuestra tienda</p>';
             $mailer = new Mailer();
             $mailer->enviarEmail($email, $asunto, $cuerpo);
         }

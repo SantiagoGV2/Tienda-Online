@@ -14,7 +14,7 @@ $sql = "SELECT tran_id, com_fecha, com_status, clientes.cli_direccion, com_total
 FROM compras INNER JOIN clientes ON compras.cli_id = clientes.cli_id ORDER BY DATE(com_fecha)DESC";
 $resultado = $con->query($sql);
 
-require '../header.php';
+require '../header2.php';
 ?>
 
 <main class="flex-shrink-0">

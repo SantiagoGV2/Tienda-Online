@@ -24,7 +24,7 @@ FROM usuarios
 INNER JOIN clientes ON usuarios.cli_id = clientes.cli_id";
 $resultado = $con->query($sql);
 
-require '../header.php';
+require '../header2.php';
 ?>
 
 <main class="flex-shrink-0">

@@ -1,7 +1,7 @@
 <?php
 require '../config/database.php';
 require '../config/config.php';
-require '../header.php';
+require '../header2.php';
 
 if (!isset($_SESSION['user_type'])) {
     header("Location: ../index.php");

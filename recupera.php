@@ -11,7 +11,7 @@ $errors = [];
 if (!empty($_POST)) {
 
     $email = trim($_POST['email']);
-    
+
 
     if (esNulo([$email])) {
         $errors[] = "Debe llenar todos los campos";
@@ -19,8 +19,8 @@ if (!empty($_POST)) {
     if (!esEmail($email)) {
         $errors[] = "El email no es valido";
     }
-    if(count($errors) == 0){
-        if(validarEmail($email, $con)){
+    if (count($errors) == 0) {
+        if (validarEmail($email, $con)) {
             $sql = $con->prepare("SELECT usuarios.usu_id, clientes.cli_nombre FROM usuarios
             INNER JOIN clientes ON usuarios.usu_id = clientes.cli_id WHERE clientes.cli_email LIKE ? LIMIT 1");
 
@@ -28,27 +28,85 @@ if (!empty($_POST)) {
             $row = $sql->fetch(PDO::FETCH_ASSOC);
             $user_id = $row['usu_id'];
             $nombre = $row['cli_nombre'];
-            
+
             $token = solicitaPassword($user_id, $con);
 
-            if($token !== null){
+            if ($token !== null) {
                 require 'clases/Mailer.php';
                 $mailer = new Mailer();
 
                 $url = SITE_URL . '/reset_password.php?id=' . $user_id . '&token=' . $token;
                 $asunto = "Recuperar Password - Tienda Online";
-                $cuerpo = "Estimado $nombre: <br> Si has solicitado el cambio de tu contraseña da click en el siguente 
-                enlace <a href='$url'>$url</a>";
-                $cuerpo.= "<br> Si no hiciste esta solicitud puedes ignorar este correo.";
+                $cuerpo = "
+                <html>
+                <head>
+                    <title>Recuperar Password - Tienda Online</title>
+                    <style>
+                        .container {
+                            width: 100%;
+                            max-width: 600px;
+                            margin: 0 auto;
+                            padding: 20px;
+                            font-family: Arial, sans-serif;
+                        }
+                        .header {
+                            text-align: center;
+                            padding: 10px 0;
+                            background-color: #f4f4f4;
+                            border-bottom: 1px solid #ddd;
+                        }
+                        .content {
+                            padding: 20px;
+                            text-align: center;
+                        }
+                        .button {
+                            display: inline-block;
+                            padding: 10px 20px;
+                            margin-top: 20px;
+                            font-size: 16px;
+                            color: #fff;
+                            background-color: #007bff;
+                            border-radius: 5px;
+                            text-decoration: none;
+                        }
+                        .footer {
+                            padding: 10px 0;
+                            background-color: #f4f4f4;
+                            border-top: 1px solid #ddd;
+                            text-align: center;
+                            font-size: 12px;
+                            color: #777;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <div class='header'>
+                            <h1>Tienda Online</h1>
+                        </div>
+                        <div class='content'>
+                            <h2>¡Hola, $nombre!</h2>
+                            <p>Si has solicitado el cambio de tu contraseña, por favor haz clic en el siguiente enlace:</p>
+                            <a href='$url' class='button'>Recuperar Contraseña</a>
+                            <p>Si no puedes hacer clic en el enlace, copia y pega la siguiente URL en tu navegador:</p>
+                            <p><a href='$url'>$url</a></p>
+                            <p>Si no hiciste esta solicitud, puedes ignorar este correo.</p>
+                        </div>
+                        <div class='footer'>
+                            <p>&copy; 2024 Tienda Online. Todos los derechos reservados.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+                ";
 
                 if ($mailer->enviarEmail($email, $asunto, $cuerpo)) {
-                    echo "<p><b>Correo enviado</b></p>";
-                    echo "<p>Hemos enviado un correo a la direccion $email para restablecer la contraseña.</p>";
+                    header("Location: recuperaPass.php?email=" . $email);
                     exit;
                 }
+            } else {
+                $errors[] = "No existe una cuanta asociada a este correo electronico";
             }
-        }else{
-            $errors[] = "No existe una cuanta asociada a este correo electronico";
         }
     }
 }

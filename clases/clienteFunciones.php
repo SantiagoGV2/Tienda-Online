@@ -27,7 +27,7 @@ function generarToken(){
 }
 function registraCliente(array $datos, $con){
     $sql = $con->prepare( "INSERT INTO clientes(cli_nombre,cli_apellidos,cli_email,cli_telefono,cli_direccion,cli_status,cli_fecha_alta) 
-    VALUES (?,?,?,?,?,,1,now())");
+    VALUES (?,?,?,?,?,1,now())");
     if($sql->execute($datos)){
         return $con-> lastInsertId();
     }
@@ -87,19 +87,21 @@ function mostrarMensajes(array $errors){
 
 function validarToken($id, $token, $con){
     $msg = "";
-    $sql = $con->prepare( "SELECT usu_id FROM usuarios WHERE usu_id = ? AND usu_token LIKE ? LIMIT 1");
+    $sql = $con->prepare("SELECT usu_id FROM usuarios WHERE usu_id = ? AND usu_token LIKE ? LIMIT 1");
     $sql->execute([$id, $token]);
     if($sql->fetchColumn() > 0){
-        if(activarUsuario($id,$con)){
-            $msg= "Cuenta Activada Exitosamente";
+        if(activarUsuario($id, $con)){
+            $msg = "Cuenta Activada Exitosamente";
         }else{
-            $msg= "Error al Activar Cuenta";
+            $msg = "Error al Activar Cuenta";
         }
     }else{
         $msg = "No existe el registro del cliente";
     }
-    return $msg;
 
+    // Redireccionar a activacion.php con el mensaje como parámetro
+    header("Location: activacionUser.php?msg=" . $msg);
+    exit(); // Asegurarse de que el script se detenga después de redireccionar
 }
 
 function activarUsuario($id,$con){

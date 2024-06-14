@@ -49,12 +49,72 @@ if (!empty($_POST)) {
             if ($idUsuario > 0) {
                 $url = SITE_URL . '/activa_cliente.php?id=' . $id . '&token=' . $token;
                 $asunto = "Activar Cuenta Tienda Online";
-                $cuerpo = "Estimado $nombres: <br> Para continuar con el proceso de registro es indispensable, de click en el siguente enlace <a href='$url'>Activar Cuenta</a>";
+                $cuerpo = "
+                <html>
+                <head>
+                    <title>Activar Cuenta Tienda Online</title>
+                    <style>
+                        .container {
+                            width: 100%;
+                            max-width: 600px;
+                            margin: 0 auto;
+                            padding: 20px;
+                            font-family: Arial, sans-serif;
+                        }
+                        .header {
+                            text-align: center;
+                            padding: 10px 0;
+                            background-color: #f4f4f4;
+                            border-bottom: 1px solid #ddd;
+                        }
+                        .content {
+                            padding: 20px;
+                            text-align: center;
+                        }
+                        .button {
+                            display: inline-block;
+                            padding: 10px 20px;
+                            margin-top: 20px;
+                            font-size: 16px;
+                            color: #fff;
+                            background-color: #007bff;
+                            border-radius: 5px;
+                            text-decoration: none;
+                        }
+                        .footer {
+                            padding: 10px 0;
+                            background-color: #f4f4f4;
+                            border-top: 1px solid #ddd;
+                            text-align: center;
+                            font-size: 12px;
+                            color: #777;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <div class='header'>
+                            <h1>Tienda Online</h1>
+                        </div>
+                        <div class='content'>
+                            <h2>¡Hola, $nombres!</h2>
+                            <p>Gracias por registrarte en Tienda Online. Para completar tu registro y activar tu cuenta, por favor haz clic en el siguiente enlace:</p>
+                            <a href='$url' class='button'>Activar Cuenta</a>
+                            <p>Si no puedes hacer clic en el enlace, copia y pega la siguiente URL en tu navegador:</p>
+                            <p><a href='$url'>$url</a></p>
+                        </div>
+                        <div class='footer'>
+                            <p>&copy; 2024 Tienda Online. Todos los derechos reservados.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+                ";
 
                 if ($mailer->enviarEmail($email, $asunto, $cuerpo)) {
-                    echo "Para terminar siga las instrucciones que le hemos enviado al correo electrónico $email";
+                    header("Location: confirmacion.php?email=" . $email);
                     exit;
-                }
+                }                
             } else {
                 $errors[] = 'Error al registrar un usuario';
             }

@@ -184,11 +184,13 @@ if ($productos != null) {
 
             bricksBuilder.create("wallet", "wallet_container", {
                 initialization: {
-                    preferenceId: '<?php echo $preferenceId; ?>'
+                    preferenceId: '<?php echo $preferenceId; ?>',
+                    redirectMode:'self'
                 },
                 customization: {
                     texts: {
-                        valueProp: 'smart_option'
+                        action: 'buy',
+                        valueProp: 'security_details'
                     }
                 }
             }).then(brick => {
