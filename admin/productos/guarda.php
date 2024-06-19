@@ -24,7 +24,7 @@ $stock = $_POST['stock'];
 $categoria = $_POST['categoria'];
 
 
-$sql= "INSERT INTO productos (pro_slug, pro_nombre, pro_descripcion, pro_precio, pro_stock, pro_activo, cat_id) VALUES(?, ?, ?, ?, ?, ?, 1)";
+$sql= "INSERT INTO productos (pro_slug, pro_nombre, pro_descripcion, pro_precio, pro_stock, pro_activo, cat_id) VALUES(?, ?, ?, ?, ?, 1, ?)";
 $stm = $con->prepare($sql);
 
 if($stm->execute([$slug,$nombre,$descripcion,$precio,$stock,$categoria])){
